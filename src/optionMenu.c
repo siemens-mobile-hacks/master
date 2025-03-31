@@ -112,8 +112,9 @@ void menu_restore(GUI *gui)
 
 void menu_quit_without_rs(GUI *gui)
 {
+	extern int allow_run_scanner;
+	allow_run_scanner = 0;
 	GeneralFuncF1(1);
-	isRunScanerNeed=0;
 	CloseCSM(MAIN_CSM_ID);
 }
 

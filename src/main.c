@@ -11,21 +11,17 @@
 #include <swilib.h>
 #include <stdlib.h>
 #include <string.h>
-#include "main.h"
-#include "getConfig.h"
-#include "rect_patcher.h"
+#include <swilib/patch.h>
 #include "lang.h"
-#include "ptcFileWork.h"
-#include "optionMenu.h"
-#include "visual.h"
+#include "main.h"
 #include "master.h"
-#include "usedstr.h"
+#include "visual.h"
 #include "string.h"
-
-
-__inl
-void RunScaner(void)
-__defn( 0xBE)
+#include "usedstr.h"
+#include "getConfig.h"
+#include "optionMenu.h"
+#include "ptcFileWork.h"
+#include "rect_patcher.h"
 
 char *ptc_buf;
 int patch_n=0;
@@ -38,7 +34,8 @@ unsigned int MAIN_EDGUI_ID=0;
 //unsigned int COLOR_EDITOR_GUI_ID=0;
 int S_ICONS[3];
 WSHDR *ews;
-int isRunScanerNeed=1;
+
+int allow_run_scanner = 1;
 
 const HEADER_DESC menuheader={{0, 0, 0, 0}, NULL, (int)ELFNAME, LGP_NULL};
 const int menusoftkeys[]={0, 1, 2};
@@ -296,12 +293,14 @@ void Killer(void)
 	mfree(ptc_buf);
 	fuckThemAll();
 	FreeWS(ews);
-	//if(isRunScanerNeed) RunScaner();  //关闭了开启和关闭时的自动刷新
 	kill_elf();
 }
 
 void maincsm_onclose(CSM_RAM *csm)
 {
+	if (allow_run_scanner) {
+		RunScaner();
+	}
 	SUBPROC((void *)Killer);
 }
 
