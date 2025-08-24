@@ -287,21 +287,20 @@ int maincsm_onmessage(CSM_RAM *data, GBS_MSG *msg)
 	return(1);
 }
 
-void Killer(void)
-{
-	saveAllConfig();
+void DestroyData() {
 	mfree(ptc_buf);
 	fuckThemAll();
 	FreeWS(ews);
-	kill_elf();
 }
 
 void maincsm_onclose(CSM_RAM *csm)
 {
+	saveAllConfig();
 	if (allow_run_scanner) {
 		RunScaner();
 	}
-	SUBPROC((void *)Killer);
+	DestroyData();
+	SUBPROC(kill_elf);
 }
 
 const int minus11=-11;
@@ -351,7 +350,7 @@ int main(void)
 	ews=AllocWS(MAX_WS_LEN);
 	if(!getAllPatchData())
 	{
-		SUBPROC((void *)Killer);
+		DestroyData();
 		return 0;
 	}
 	UpdateCSMname();
